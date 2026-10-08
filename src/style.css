@@ -1,0 +1,204 @@
+:root {
+  --c-primary: #ff7a1a;
+  --c-primary-dark: #d65a00;
+  --c-blue: #1b9bd8;
+  --c-blue-dark: #0f6d9c;
+  --c-yellow: #ffd23f;
+  --c-green: #3ccf6e;
+  --c-red: #ff4d4d;
+  --c-ink: #1d2433;
+  --c-panel: rgba(255, 255, 255, 0.94);
+  --c-panel-dark: rgba(20, 28, 45, 0.82);
+  --radius: 18px;
+  --shadow: 0 6px 0 rgba(0, 0, 0, 0.18), 0 10px 30px rgba(0, 0, 0, 0.18);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--c-ink);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0b1630;
+  overscroll-behavior: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+canvas.game-canvas {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  touch-action: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--c-primary);
+  box-shadow: 0 5px 0 var(--c-primary-dark);
+  transition: transform 0.08s, box-shadow 0.08s, filter 0.15s;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.btn:hover {
+  filter: brightness(1.08);
+}
+.btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 var(--c-primary-dark);
+}
+.btn.blue {
+  background: var(--c-blue);
+  box-shadow: 0 5px 0 var(--c-blue-dark);
+}
+.btn.green {
+  background: var(--c-green);
+  box-shadow: 0 5px 0 #23964c;
+}
+.btn.gray {
+  background: #8a93a6;
+  box-shadow: 0 5px 0 #646c7d;
+}
+.btn.red {
+  background: var(--c-red);
+  box-shadow: 0 5px 0 #c22a2a;
+}
+.btn.small {
+  padding: 7px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+}
+.btn:disabled {
+  filter: grayscale(0.8) brightness(0.9);
+  cursor: not-allowed;
+}
+
+.panel {
+  background: var(--c-panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.screen {
+  position: fixed;
+  inset: 0;
+  padding: calc(14px + var(--safe-t)) calc(18px + var(--safe-r)) calc(14px + var(--safe-b)) calc(18px + var(--safe-l));
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.screen-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.screen-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+  letter-spacing: 2px;
+}
+
+.coin-badge {
+  margin-left: auto;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--c-yellow);
+  font-weight: 900;
+  font-size: 18px;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+.scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+}
+
+.stat-bar {
+  height: 9px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+.stat-bar > i {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--c-yellow), var(--c-primary));
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #eef2f8;
+  color: #4a5670;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+@media (max-height: 500px) {
+  .screen-title {
+    font-size: 22px;
+  }
+  .btn {
+    padding: 9px 16px;
+    font-size: 15px;
+  }
+  .screen {
+    padding: calc(8px + var(--safe-t)) calc(12px + var(--safe-r)) calc(8px + var(--safe-b)) calc(12px + var(--safe-l));
+  }
+}

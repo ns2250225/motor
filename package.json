@@ -1,0 +1,28 @@
+{
+  "name": "pelican-road-rage",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview --host",
+    "typecheck": "vue-tsc --noEmit",
+    "sim": "tsx scripts/sim.ts",
+    "validate-tracks": "tsx scripts/validate-tracks.ts"
+  },
+  "dependencies": {
+    "@dimforge/rapier3d-compat": "^0.21.0",
+    "pinia": "^4.0.3",
+    "three": "^0.186.1",
+    "vue": "^3.5.43"
+  },
+  "devDependencies": {
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.3",
+    "vue-tsc": "^3.3.12"
+  }
+}
