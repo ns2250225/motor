@@ -66,19 +66,19 @@ export class CombatSystem {
     if (inp.attackL && r.cd.wingL <= 0) {
       r.cd.wingL = COOLDOWNS.wingL * cdMul;
       p.trigger('wingL');
-      this.queue(r, 'wingL', 0.12, 0.2);
+      this.queue(r, 'wingL', 0.02, 0.14);
       this.sfx(r, 'wing');
     }
     if (inp.attackR && r.cd.wingR <= 0) {
       r.cd.wingR = COOLDOWNS.wingR * cdMul;
       p.trigger('wingR');
-      this.queue(r, 'wingR', 0.12, 0.2);
+      this.queue(r, 'wingR', 0.02, 0.14);
       this.sfx(r, 'wing');
     }
     if (inp.peck && r.cd.peck <= 0) {
       r.cd.peck = COOLDOWNS.peck * cdMul;
       p.trigger('peck');
-      this.queue(r, 'peck', 0.14, 0.18);
+      this.queue(r, 'peck', 0.02, 0.12);
       this.sfx(r, 'peck');
     }
     if (inp.sweep && r.cd.sweep <= 0) {

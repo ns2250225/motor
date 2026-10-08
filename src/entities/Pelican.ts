@@ -23,20 +23,16 @@ function mesh(geo: THREE.BufferGeometry, mat: THREE.Material, sx: number, sy: nu
 }
 
 /** 翅膀拍击 / 啄击动画时长（秒），与战斗判定窗口对应 */
-export const WING_DUR = 0.5;
-export const PECK_DUR = 0.45;
+export const WING_DUR = 0.32;
+export const PECK_DUR = 0.28;
 
-/** 翅膀拍击曲线：0~0.25 向后蓄力，0.25~0.55 猛抡（带过冲），之后回收 */
+/** 翅膀拍击曲线：无蓄力前摇，按下立刻猛抡（带过冲），之后回收 */
 function wingSwing(p: number) {
-  if (p < 0.25) {
-    const k = p / 0.25;
-    return { swing: -0.45 * k, out: 0.6 * k };
+  if (p < 0.35) {
+    const k = p / 0.35;
+    return { swing: 1.3 * Math.sin(k * Math.PI * 0.5), out: 0.8 + 0.2 * k };
   }
-  if (p < 0.55) {
-    const k = (p - 0.25) / 0.3;
-    return { swing: -0.45 + 1.75 * Math.sin(k * Math.PI * 0.5), out: 0.6 + 0.4 * k };
-  }
-  const k = (p - 0.55) / 0.45;
+  const k = (p - 0.35) / 0.65;
   return { swing: 1.3 * (1 - k), out: 1 - k };
 }
 
@@ -462,7 +458,7 @@ export class Pelican {
       mouth = 0.8;
     }
 
-    // 翅膀攻击：先向后蓄力，再变大成巨型翅膀狠狠抡出去
+    // 翅膀攻击：无蓄力，按下立刻变大成巨型翅膀狠狠抡出去
     let wingLOut = 0;
     let wingROut = 0;
     let wingLScale = 1;
@@ -488,21 +484,16 @@ export class Pelican {
     } else if (this.mechanical) this.wingR.rotation.x = damp(this.wingR.rotation.x % (Math.PI * 2), 0, 10, dt);
     if (this.heldBone.visible) wingLRot -= 0.6 + Math.sin(t * 9) * 0.4;
 
-    // 大嘴啄击：先缩脖子蓄力，再整个脖子弹射出去，嘴巴拉长
+    // 大嘴啄击：无蓄力，按下立刻整个脖子弹射出去，嘴巴拉长
     let beakYaw = 0;
     let peckStretch = 0;
     if (this.peckT > 0) {
       const p = 1 - this.peckT / PECK_DUR;
-      if (p < 0.3) {
-        neckExtend = -0.5 * (p / 0.3);
-        torsoX -= 0.3 * (p / 0.3);
-      } else {
-        const k = Math.sin(((p - 0.3) / 0.7) * Math.PI);
-        neckExtend = k * 1.8;
-        peckStretch = k;
-        torsoX += k * 0.5;
-      }
-      mouth = Math.max(mouth, p > 0.25 && p < 0.7 ? 1 : 0.2);
+      const k = Math.sin(p * Math.PI);
+      neckExtend = k * 1.8;
+      peckStretch = k;
+      torsoX += k * 0.5;
+      mouth = Math.max(mouth, p > 0.15 && p < 0.75 ? 1 : 0.2);
     }
     if (this.sweepT > 0) {
       const p = 1 - this.sweepT / 0.55;
