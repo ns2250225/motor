@@ -339,7 +339,7 @@ export class CombatSystem {
     const bPow = b.superDash > 0 || b.golden > 0;
     if (aPow !== bPow) {
       const [s, t] = aPow ? [a, b] : [b, a];
-      if (t.invuln <= 0 && t.state === 'driving') {
+      if (!t.invincible && t.state === 'driving') {
         const sgn = aPow ? 1 : -1;
         t.vx += nx * sgn * 18;
         t.vz += nz * sgn * 18;
@@ -384,7 +384,7 @@ export class CombatSystem {
       w.events.emit('sfx', { name: vrel > 14 ? 'bigHit' : 'hit', racer: tar });
       w.fx.burst('spark', (a.pos.x + b.pos.x) / 2, a.pos.y + 0.6, (a.pos.z + b.pos.z) / 2, 8, 6);
       w.fx.burst('feather', tar.pos.x, tar.pos.y + 1.2, tar.pos.z, 4, 3);
-      if (power > 34 && tar.state === 'driving') tar.crash('ram', att, power * 0.3);
+      if (power > 34 && tar.state === 'driving' && !tar.invincible) tar.crash('ram', att, power * 0.3);
       else tar.damage(dmg, att, 'ram');
       if (att.isPlayer || tar.isPlayer) {
         w.events.emit('shake', { amount: clamp(vrel / 30, 0.2, 0.6), racer: att.isPlayer ? att : tar });

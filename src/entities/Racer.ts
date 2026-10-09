@@ -141,6 +141,7 @@ export class Racer {
   blind = 0;
   golden = 0;
   superDash = 0;
+  spawnShield = 0; // 起跑保护：GO 后几秒无敌，避免刚出发就被围攻打飞
   boostTimer = 0;
   boneTimer = 0;
   stunned = 0;
@@ -285,7 +286,7 @@ export class Racer {
   }
 
   get invincible() {
-    return this.golden > 0 || this.superDash > 0 || this.invuln > 0;
+    return this.golden > 0 || this.superDash > 0 || this.invuln > 0 || this.spawnShield > 0;
   }
 
   get lap() {
@@ -472,6 +473,7 @@ export class Racer {
     this.blind = dec(this.blind);
     this.golden = dec(this.golden);
     this.superDash = dec(this.superDash);
+    this.spawnShield = dec(this.spawnShield);
     this.boostTimer = dec(this.boostTimer);
     this.stunned = dec(this.stunned);
     this.hornCd = dec(this.hornCd);
@@ -1005,12 +1007,12 @@ export class Racer {
         f.scale.set(1.2, 1.2, l);
       }
     }
-    // 无敌闪烁 / 黄金光环
-    this.goldAura.visible = this.golden > 0 || this.superDash > 0;
+    // 无敌闪烁 / 黄金光环（起跑保护用青色光环区分）
+    this.goldAura.visible = this.golden > 0 || this.superDash > 0 || this.spawnShield > 0;
     if (this.goldAura.visible) {
       this.goldAura.rotation.y += dt * 2;
       this.goldAura.scale.setScalar(1 + Math.sin(time * 10) * 0.05);
-      ((this.goldAura.material as THREE.MeshBasicMaterial).color as THREE.Color).setHex(this.golden > 0 ? 0xffd700 : 0xffffff);
+      ((this.goldAura.material as THREE.MeshBasicMaterial).color as THREE.Color).setHex(this.golden > 0 ? 0xffd700 : this.superDash > 0 ? 0xffffff : 0x3cc8ff);
     }
     this.tilt.visible = !useLod && !(this.invuln > 0 && this.golden <= 0 && Math.floor(time * 14) % 2 === 0 && this.state === 'driving');
     this.lod.visible = useLod;

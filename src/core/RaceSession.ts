@@ -360,6 +360,9 @@ export class RaceSession {
       if (this.countdown <= 1) {
         w.started = true;
         this.game.audio.play('go');
+        // 起跑保护：开局几秒无敌，避免被围攻直接打飞
+        this.player.spawnShield = 3;
+        this.game.store.notify('起跑保护：3 秒无敌！', 'good');
         for (const r of this.racers) r.pelican.trigger('shout');
         setTimeout(() => {
           if (this.game.store.hud.countdown === 'GO!') this.game.store.hud.countdown = null;
@@ -565,7 +568,7 @@ export class RaceSession {
     h.fps = this.game.renderer.fps;
     h.drifting = p.drifting;
     h.driftLevel = p.driftCharge > 2.2 ? 3 : p.driftCharge > 1.4 ? 2 : p.driftCharge > 0.7 ? 1 : 0;
-    h.invincible = p.golden > 0 || p.superDash > 0;
+    h.invincible = p.golden > 0 || p.superDash > 0 || p.spawnShield > 0;
     h.frozen = p.frozen > 0;
     h.finished = p.finished;
     h.boneTimer = p.boneTimer;
