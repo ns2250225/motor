@@ -14,12 +14,16 @@
       </div>
     </div>
     <div v-else class="grid scroll">
-      <button
+      <!-- 用 div 而非 button：button 作为网格项时浏览器固有高度测量失真，导致卡片行高塌缩、内容被裁 -->
+      <div
         v-for="t in TRACKS"
         :key="t.id"
         class="card panel"
         :class="{ sel: store.setup.trackId === t.id, locked: !isUnlocked(t.id) }"
+        role="button"
+        tabindex="0"
         @click="select(t.id)"
+        @keydown.enter.prevent="select(t.id)"
       >
         <div class="thumb" :style="{ background: `linear-gradient(180deg, ${hex(t.palette.skyTop)}, ${hex(t.palette.skyBottom)} 55%, ${hex(t.palette.ground)} 56%)` }">
           <span class="num">{{ String(TRACKS.indexOf(t) + 1).padStart(2, '0') }}</span>
@@ -39,7 +43,7 @@
             <span class="or">或在生涯模式中解锁</span>
           </div>
         </div>
-      </button>
+      </div>
     </div>
     <RiderBar>
       <button class="btn big-start" :disabled="!canStart" @click="start">🏍️ 开始比赛</button>
@@ -87,6 +91,8 @@ function start() {
   flex: 1;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  /* overflow:hidden 的卡片作为网格项时，Chrome 对 auto 行高测量失真会导致内容被裁，显式按内容取行高 */
+  grid-auto-rows: max-content;
   gap: 12px;
   padding: 4px;
   align-content: start;
@@ -95,8 +101,8 @@ function start() {
   text-align: left;
   padding: 0;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  display: block;
+  cursor: pointer;
   font-family: inherit;
   color: var(--c-ink);
   border: 4px solid transparent;
@@ -187,5 +193,69 @@ function start() {
 }
 .endless .name {
   font-size: 24px;
+}
+
+/* 手机横屏：高度有限，卡片改为「缩略图在左」的紧凑横向布局，固定行高避免挤压 */
+@media (max-height: 500px) {
+  .screen-header {
+    margin-bottom: 8px;
+  }
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-auto-rows: 84px;
+    gap: 8px;
+    padding: 0;
+  }
+  .card {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .thumb {
+    flex: none;
+    width: 96px;
+    height: auto;
+  }
+  .num {
+    font-size: 20px;
+  }
+  .info {
+    min-width: 0;
+    padding: 6px 10px;
+    gap: 2px;
+    justify-content: center;
+  }
+  .name {
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .stars {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .desc {
+    display: none;
+  }
+  .card.locked .meta {
+    display: none;
+  }
+  .buy {
+    margin-top: 0;
+  }
+  .buy .btn {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+  .or {
+    display: none;
+  }
+  .endless {
+    padding: 12px 14px;
+  }
+  .endless .icon {
+    font-size: 44px;
+  }
 }
 </style>
